@@ -78,9 +78,9 @@ def parse_tweet(tweet_from, tweet_text):
 
 
 def generate_reply_tweet(users):
-    reply = ' '.join(['@%s' % user for user in users if user != 'slashgif'])
+    reply = '.' + ' '.join(['@%s' % user for user in users if user != 'slashgif'])
     if len(reply) > MAX_TWEET_TEXT_LENGTH:
-        reply = reply[:MAX_TWEET_TEXT_LENGTH - len(DOTS)] + DOTS
+        reply = reply[:MAX_TWEET_TEXT_LENGTH - len(DOTS) - 1] + DOTS
 
     logging.info('generate_reply_tweet: %s' % reply)
     return reply

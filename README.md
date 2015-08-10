@@ -2,7 +2,7 @@
 
 The missing GIF Twitter bot. Simply tag [@slashgif](https://twitter.com/slashgif) in your tweet with a search term.
 
-<< SCREENSHOT >>
+[![](http://i.imgur.com/kL8IWnz.png)](https://twitter.com/slashgif/status/630542797456609280)
 
 ### Where is this bot running?
 
