@@ -8,7 +8,7 @@ The missing GIF Twitter bot. Simply tag [@slashgif](https://twitter.com/slashgif
 
 Currently I'm running this bot on a 1GB [DigitalOcean](https://www.digitalocean.com/?refcode=422889a8186d) instance (yes, that's an affiliate link. Use that to get a free VPS for 2 months). The bot is not resource-intensive and uses a couple dozen MBs of RAM.
 
-### Running
+## Running
 
 #### Requirements
 
@@ -33,3 +33,7 @@ Then, to run the bot:
 $ pip3 install -r requirements.txt
 $ python3 bot.py
 ```
+
+## License 
+
+Apache 2.0
