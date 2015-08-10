@@ -52,7 +52,10 @@ def get_gif_filename(term):
     images = [i for i in giphy.search(term, limit=20) if i.filesize < MAX_IMAGE_SIZE]
     if not images or images is []:
         return None
+
     image = random.choice(images)
+    if not image:
+        return None
 
     filename = 'images/%s.%s' % (term.replace(' ', '_'), image.type)
     logging.info('get_gif_filename: %s--%s' % (term, filename))
