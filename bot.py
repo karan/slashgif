@@ -50,7 +50,10 @@ backoff = BACKOFF
 
 def get_gif_filename(term):
     images = [i for i in giphy.search(term, limit=20) if i.filesize < MAX_IMAGE_SIZE]
+    if not images or images is []:
+        return None
     image = random.choice(images)
+
     filename = 'images/%s.%s' % (term.replace(' ', '_'), image.type)
     logging.info('get_gif_filename: %s--%s' % (term, filename))
 
@@ -105,13 +108,16 @@ class StreamListener(tweepy.StreamListener):
 
             # Search and save the image
             filename = get_gif_filename(search_term)
-            # Generate and send the the reply tweet
-            reply_tweet = generate_reply_tweet(tagged_users)
-            reply_status = api.update_with_media(filename=filename,
-                status=reply_tweet, in_reply_to_status_id=tweet_id)
+            if filename:
+                # Generate and send the the reply tweet
+                reply_tweet = generate_reply_tweet(tagged_users)
+                reply_status = api.update_with_media(filename=filename,
+                    status=reply_tweet, in_reply_to_status_id=tweet_id)
 
-            logging.info('on_status_sent: %s %s' % (
-                reply_status.id_str, reply_status.text))
+                logging.info('on_status_sent: %s %s' % (
+                    reply_status.id_str, reply_status.text))
+            else:
+                logging.info('on_status_failed: No images for %s' % search_term)
 
     def on_error(self, status_code):
         global backoff
