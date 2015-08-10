@@ -1,0 +1,4 @@
+requests==2.7.0
+tweepy==3.3.0
+giphypop==0.2
+twitter-text-python==1.1.0
