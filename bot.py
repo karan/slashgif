@@ -103,7 +103,7 @@ class StreamListener(tweepy.StreamListener):
         tweet_text = status.text
         tweet_from = status.user.screen_name
 
-        if tweet_from != 'slashgif' and 'retweeted_status' not in status:
+        if tweet_from != 'slashgif' and not hasattr(status, 'retweeted_status'):
             logging.info('on_status: %s--%s' % (tweet_id, tweet_text))
 
             # Parse tweet for search term
