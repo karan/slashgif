@@ -103,24 +103,27 @@ class StreamListener(tweepy.StreamListener):
         tweet_text = status.text
         tweet_from = status.user.screen_name
 
-        if tweet_from != 'slashgif':
+        if tweet_from != 'slashgif' and 'retweeted_status' not in status:
             logging.info('on_status: %s--%s' % (tweet_id, tweet_text))
 
             # Parse tweet for search term
             tagged_users, search_term = parse_tweet(tweet_from, tweet_text)
 
-            # Search and save the image
-            filename = get_gif_filename(search_term)
-            if filename:
-                # Generate and send the the reply tweet
-                reply_tweet = generate_reply_tweet(tagged_users)
-                reply_status = api.update_with_media(filename=filename,
-                    status=reply_tweet, in_reply_to_status_id=tweet_id)
+            if search_term:
+                # Search and save the image
+                filename = get_gif_filename(search_term)
+                if filename:
+                    # Generate and send the the reply tweet
+                    reply_tweet = generate_reply_tweet(tagged_users)
+                    reply_status = api.update_with_media(filename=filename,
+                        status=reply_tweet, in_reply_to_status_id=tweet_id)
 
-                logging.info('on_status_sent: %s %s' % (
-                    reply_status.id_str, reply_status.text))
+                    logging.info('on_status_sent: %s %s' % (
+                        reply_status.id_str, reply_status.text))
+                else:
+                    logging.info('on_status_failed: No images for %s' % search_term)
             else:
-                logging.info('on_status_failed: No images for %s' % search_term)
+                logging.info('on_status_failed: No search terms')
 
     def on_error(self, status_code):
         global backoff
