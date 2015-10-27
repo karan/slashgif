@@ -83,8 +83,8 @@ def parse_tweet(tweet_from, tweet_text):
     return tagged_users, tweet_text.strip()
 
 
-def generate_reply_tweet(users):
-    reply = '.' + ' '.join(['@%s' % user for user in users if user != 'slashgif'])
+def generate_reply_tweet(users, search_term):
+    reply = '%s %s' % (search_term, ' '.join(['@%s' % user for user in users if user != 'slashgif']))
     if len(reply) > MAX_TWEET_TEXT_LENGTH:
         reply = reply[:MAX_TWEET_TEXT_LENGTH - len(DOTS) - 1] + DOTS
 
@@ -114,7 +114,7 @@ class StreamListener(tweepy.StreamListener):
                 filename = get_gif_filename(search_term)
                 if filename:
                     # Generate and send the the reply tweet
-                    reply_tweet = generate_reply_tweet(tagged_users)
+                    reply_tweet = generate_reply_tweet(tagged_users, search_term)
                     reply_status = api.update_with_media(filename=filename,
                         status=reply_tweet, in_reply_to_status_id=tweet_id)
 
