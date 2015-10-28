@@ -28,6 +28,7 @@ DOTS = '...'
 BACKOFF = 0.5 # Initial wait time before attempting to reconnect
 MAX_BACKOFF = 300 # Maximum wait time between connection attempts
 MAX_IMAGE_SIZE = 3072 * 1024 # bytes
+USERNAME = 'slashgif'
 
 logging.basicConfig(filename='logger.log',
                     level=logging.INFO,
@@ -67,24 +68,26 @@ def get_gif_filename(term):
 
 
 def parse_tweet(tweet_from, tweet_text):
+    query = tweet_text[tweet_text.index('@%s' % USERNAME) + len('@%s' % USERNAME) + 1:]
+
     result = parser.parse(tweet_text)
     tagged_users = result.users + [tweet_from]
     tagged_hashtags = result.tags
     tagged_urls = result.urls
 
     for user in tagged_users:
-        tweet_text = tweet_text.replace('@%s' % user, '')
+        query = query.replace('@%s' % user, '')
     for tag in tagged_hashtags:
-        tweet_text = tweet_text.replace('#%s' % tag, '')
+        query = query.replace('#%s' % tag, '')
     for url in tagged_urls:
-        tweet_text = tweet_text.replace('%s' % url, '')
+        query = query.replace('%s' % url, '')
 
-    logging.info('parse_tweet: %s--%s' % (tagged_users, tweet_text))
-    return tagged_users, tweet_text.strip()
+    logging.info('parse_tweet: %s--%s' % (tagged_users, query))
+    return tagged_users, query.strip()
 
 
 def generate_reply_tweet(users, search_term):
-    reply = '%s %s' % (search_term, ' '.join(['@%s' % user for user in users if user != 'slashgif']))
+    reply = '%s %s' % (search_term, ' '.join(['@%s' % user for user in users if user != USERNAME]))
     if len(reply) > MAX_TWEET_TEXT_LENGTH:
         reply = reply[:MAX_TWEET_TEXT_LENGTH - len(DOTS) - 1] + DOTS
 
@@ -103,7 +106,7 @@ class StreamListener(tweepy.StreamListener):
         tweet_text = status.text
         tweet_from = status.user.screen_name
 
-        if tweet_from != 'slashgif' and not hasattr(status, 'retweeted_status'):
+        if tweet_from != USERNAME and not hasattr(status, 'retweeted_status'):
             logging.info('on_status: %s--%s' % (tweet_id, tweet_text))
 
             # Parse tweet for search term
