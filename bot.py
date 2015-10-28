@@ -54,7 +54,7 @@ def get_gif_filename(term):
     if not images or images is []:
         return None
 
-    image = random.choice(images)
+    image = images[0]
     if not image:
         return None
 
